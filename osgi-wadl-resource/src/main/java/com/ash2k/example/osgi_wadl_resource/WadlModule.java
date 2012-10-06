@@ -26,12 +26,39 @@ public class WadlModule extends PrivateModule {
 				binder().requireExplicitBindings();
 				bind(GuiceContainer.class);
 				bind(GuiceFilter.class).in(Singleton.class);
+				bind(SomeResource.class);
+
 				Map<String, String> params = new HashMap<String, String>();
 				params.put(ResourceConfig.PROPERTY_WADL_GENERATOR_CONFIG,
 						OsgiWadlGeneratorConfig.class.getCanonicalName());
-				serve("*").with(GuiceContainer.class, params);
 
-				bind(SomeResource.class);
+				// WHEN DEPLOYING TO ROOT
+
+				// generates The resource 'resourcedoc.xml' does not exist.
+				serve("/*").with(GuiceContainer.class, params);
+
+				// generates The resource 'resourcedoc.xml' does not exist.
+				// serve("*").with(GuiceContainer.class, params);
+
+				// this do not work - WHY?
+				// serve("*").with(GuiceContainer.class);
+
+				// this works
+				// serve("/*").with(GuiceContainer.class);
+
+				// WHEN DEPLOYING TO NON-ROOT
+
+				// generates The resource 'resourcedoc.xml' does not exist.
+				// serve("/*").with(GuiceContainer.class, params);
+
+				// generates The resource 'resourcedoc.xml' does not exist.
+				// serve("*").with(GuiceContainer.class, params);
+
+				// this do not work - WHY?
+				// serve("*").with(GuiceContainer.class);
+
+				// this works
+				// serve("/*").with(GuiceContainer.class);
 			}
 		});
 		expose(GuiceFilter.class);
